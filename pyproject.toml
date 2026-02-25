@@ -1,0 +1,25 @@
+[project]
+name = "app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Factorino73", email = "masenkin73@xmail.ru" }
+]
+requires-python = "~=3.12"
+dependencies = [
+    "adaptix>=3.0.0b11",
+    "bcrypt>=5.0.0",
+    "dishka>=1.8.0",
+    "fastapi[standard]>=0.129.0",
+    "mypy>=1.19.1",
+    "pydantic>=2.12.5",
+    "pyjwt[bcrypt]>=2.11.0",
+    "ruff>=0.15.1",
+    "sqlalchemy[aiosqlite]>=2.0.46",
+    "uvicorn>=0.40.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.17,<0.9.0"]
+build-backend = "uv_build"
