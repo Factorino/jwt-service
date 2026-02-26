@@ -26,11 +26,11 @@ class RegisterUser(Interactor[RegisterUserRequest, RegisterUserResponse]):
         self,
         user_repository: IUserRepository,
         password_hasher: IPasswordHasher,
-        uow: ITransactionManager,
+        transaction_manager: ITransactionManager,
     ) -> None:
         self._user_repository: IUserRepository = user_repository
         self._password_hasher: IPasswordHasher = password_hasher
-        self._uow: ITransactionManager = uow
+        self._uow: ITransactionManager = transaction_manager
 
     async def execute(self, request: RegisterUserRequest) -> RegisterUserResponse:
         await self._validate(request)

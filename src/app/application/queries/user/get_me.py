@@ -22,7 +22,7 @@ class GetMe(Interactor[None, GetMeResponse]):
     ) -> None:
         self._idp: IIdentityProvider = identity_provider
 
-    async def execute(self, request: None) -> GetMeResponse:  # noqa: ARG002
+    async def execute(self, request: None = None) -> GetMeResponse:  # noqa: ARG002
         user: User = await self._idp.get_user()
 
         return GetMeResponse(

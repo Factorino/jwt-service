@@ -34,10 +34,10 @@ class SATransactionManager(ITransactionManager):
         if isinstance(exception, IntegrityError):
             orig_error: str = str(exception.orig).lower()
             if "uq_" in orig_error or "pk_" in orig_error:
-                raise AlreadyExistsError
+                raise AlreadyExistsError from exception
             if "fk_" in orig_error:
-                raise NotFoundError
+                raise NotFoundError from exception
             if "ck_" in orig_error:
-                raise ValidationError
+                raise ValidationError from exception
 
         raise OperationFailedError from exception

@@ -11,3 +11,11 @@ class NotFoundError(ApplicationError):
 
 class OperationFailedError(ApplicationError):
     pass
+
+
+class DataMapperError(OperationFailedError):
+    pass
+
+
+class UnexpectedError(ApplicationError):
+    pass

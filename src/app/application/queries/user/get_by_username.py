@@ -1,6 +1,5 @@
 from app.application.common.dto.base import dto
 from app.application.common.dto.user import UserRead
-from app.application.errors.auth import ForbiddenError
 from app.application.errors.base import NotFoundError
 from app.application.interfaces.auth.identity_provider import IIdentityProvider
 from app.application.interfaces.interactor import Interactor
@@ -42,10 +41,12 @@ class GetUserByUsername(Interactor[GetUserByUsernameRequest, GetUserByUsernameRe
         current_user: User = await self._idp.get_user()
         target_user: User | None = await self._user_repository.find_by_username(request.username)
 
-        if target_user is None:
-            raise NotFoundError(f"User with username '{request.username}' not found")
+        exception = NotFoundError(f"User with username '{request.username}' not found")
 
-        if current_user.role != UserRole.ADMIN and current_user.id != target_user.id:
-            raise ForbiddenError("Access denied")
+        if target_user is None:
+            raise exception
+
+        if current_user.role < UserRole.ADMIN and current_user.id != target_user.id:
+            raise exception
 
         return target_user

@@ -3,6 +3,8 @@ from collections.abc import Hashable
 from dataclasses import dataclass
 from typing import Any, Self, dataclass_transform
 
+from app.domain.errors.base import DomainError
+
 
 @dataclass_transform(kw_only_default=True)
 def entity[ClsT](cls: type[ClsT]) -> type[ClsT]:
@@ -15,12 +17,12 @@ class Entity[IdT: Hashable](ABC):
 
     def __new__(cls, *_args: Any, **_kwargs: Any) -> Self:
         if cls is Entity:
-            raise TypeError("Base Entity cannot be instantiated directly")
+            raise DomainError("Base Entity cannot be instantiated directly")
         return object.__new__(cls)
 
     def __setattr__(self, name: str, value: Any) -> None:
         if name == "id" and getattr(self, "id", None) is not None:
-            raise AttributeError("Changing entity ID is not permitted")
+            raise DomainError("Changing entity ID is not permitted")
         return object.__setattr__(self, name, value)
 
     def __eq__(self, other: object) -> bool:

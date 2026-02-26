@@ -1,18 +1,18 @@
 from collections.abc import Callable
 from uuid import UUID
 
-from adaptix.conversion import get_converter
 from sqlalchemy import Result, Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.interfaces.user.user_repository import IUserRepository
 from app.domain.entities.user import User
+from app.infrastructure.database.mapper import get_mapper
 from app.infrastructure.database.models.user import UserORM
 from app.infrastructure.database.repositories.base_repository import SABaseRepository
 
 
-_to_domain: Callable[[UserORM], User] = get_converter(UserORM, User)
-_to_orm: Callable[[User], UserORM] = get_converter(User, UserORM)
+_to_domain: Callable[[UserORM], User] = get_mapper(UserORM, User)
+_to_orm: Callable[[User], UserORM] = get_mapper(User, UserORM)
 
 
 class SAUserRepository(IUserRepository, SABaseRepository):

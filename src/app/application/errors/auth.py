@@ -13,5 +13,5 @@ class TokenExpiredError(AuthenticationError):
     pass
 
 
-class ForbiddenError(AuthenticationError):
+class ForbiddenError(ApplicationError):
     pass
