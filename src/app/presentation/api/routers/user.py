@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from dishka.integrations.fastapi import FromDishka
 from fastapi import APIRouter, Depends, status
 
@@ -10,7 +12,6 @@ from app.application.queries.user.get_me import GetMe, GetMeResponse
 from app.presentation.api.dependencies import get_current_user_token
 from app.presentation.api.schemas.mapper import map_to
 from app.presentation.api.schemas.user.responses import UserSchema
-from typing import Annotated
 
 
 router = APIRouter(
