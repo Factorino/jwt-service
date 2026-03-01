@@ -33,8 +33,9 @@ def load_config[CfgT](
 
     data: dict[str, Any] = read_toml(path)
 
-    scope: str = ConfigScope.from_config_type(type)
-    data = data.get(scope, {})
+    scope: str | None = ConfigScope.from_config_type(type)
+    if scope:
+        data = data.get(scope, {})
 
     try:
         return _retort.load(data, type)

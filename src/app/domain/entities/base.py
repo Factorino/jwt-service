@@ -8,7 +8,7 @@ from app.domain.errors.base import DomainError
 
 @dataclass_transform(kw_only_default=True)
 def entity[ClsT](cls: type[ClsT]) -> type[ClsT]:
-    return dataclass(cls, slots=True, kw_only=True)
+    return dataclass(cls, kw_only=True)
 
 
 @entity

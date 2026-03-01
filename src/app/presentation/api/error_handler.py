@@ -5,8 +5,8 @@ from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
 from app.application.errors.auth import (
+    AccessDeniedError,
     AuthenticationError,
-    ForbiddenError,
 )
 from app.application.errors.base import (
     NotFoundError,
@@ -18,7 +18,7 @@ from app.domain.errors.base import (
     AppError,
     ValidationError,
 )
-from app.presentation.api.schemas.error import ErrorResponse
+from app.presentation.api.schemas.common.error import ErrorResponseSchema
 
 
 ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyType(
@@ -27,9 +27,9 @@ ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyTy
         ValidationError: status.HTTP_400_BAD_REQUEST,
         AlreadyExistsError: status.HTTP_409_CONFLICT,
         # Application errors
-        NotFoundError: status.HTTP_404_NOT_FOUND,
         AuthenticationError: status.HTTP_401_UNAUTHORIZED,
-        ForbiddenError: status.HTTP_403_FORBIDDEN,
+        AccessDeniedError: status.HTTP_403_FORBIDDEN,
+        NotFoundError: status.HTTP_404_NOT_FOUND,
         OperationFailedError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         # Fallback errors
         UnexpectedError: status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -59,7 +59,7 @@ async def app_error_handler(_request: Request, exception: Exception) -> JSONResp
     error_type: str = get_error_type(error)
     error_message: str = get_error_message(error)
 
-    error_response: dict[str, Any] = ErrorResponse(
+    error_response: dict[str, Any] = ErrorResponseSchema(
         status_code=error_status_code,
         error_type=error_type,
         message=error_message,

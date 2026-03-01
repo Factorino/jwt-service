@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy import Result, Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.user.repository import IUserRepository
 from app.domain.entities.user import User
 from app.infrastructure.database.mapper import get_mapper
 from app.infrastructure.database.models.user import UserORM

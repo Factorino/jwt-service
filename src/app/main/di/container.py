@@ -1,4 +1,5 @@
 from dishka import AsyncContainer, Provider, make_async_container
+from dishka.integrations.fastapi import FastapiProvider
 
 from app.main.configs.api import APIConfig
 from app.main.configs.config import Config
@@ -13,6 +14,7 @@ from app.main.di.providers.repository import RepositoryProvider
 
 def create_container(config: Config) -> AsyncContainer:
     providers: list[Provider] = [
+        FastapiProvider(),
         ConfigProvider(),
         DatabaseProvider(),
         RepositoryProvider(),

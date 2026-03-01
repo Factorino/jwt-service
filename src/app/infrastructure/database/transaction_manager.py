@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.errors.base import NotFoundError, OperationFailedError
-from app.application.interfaces.transaction_manager import ITransactionManager
+from app.application.interfaces.common.transaction_manager import ITransactionManager
 from app.domain.errors.base import AlreadyExistsError, ValidationError
 
 

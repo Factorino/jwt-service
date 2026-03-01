@@ -2,8 +2,8 @@ from app.application.common.dto.base import dto
 from app.application.common.dto.user import UserRead
 from app.application.errors.base import NotFoundError
 from app.application.interfaces.auth.identity_provider import IIdentityProvider
-from app.application.interfaces.interactor import Interactor
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.common.interactor import Interactor
+from app.application.interfaces.user.repository import IUserRepository
 from app.domain.entities.user import User
 from app.domain.enums.user_role import UserRole
 

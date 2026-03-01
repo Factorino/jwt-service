@@ -1,20 +1,19 @@
-from pydantic import BaseModel
-
+from app.presentation.api.schemas.common.response import BaseResponseSchema
 from app.presentation.api.schemas.user.responses import UserSchema
 
 
-class RegisterUserResponseSchema(BaseModel):
+class RegisterUserResponseSchema(BaseResponseSchema):
     user: UserSchema
 
 
-class LoginUserResponseSchema(BaseModel):
+class LoginUserResponseSchema(BaseResponseSchema):
     access_token: str
     refresh_token: str
     token_type: str = "Bearer"  # noqa: S105
     user: UserSchema
 
 
-class RefreshTokenResponseSchema(BaseModel):
+class RefreshTokenResponseSchema(BaseResponseSchema):
     access_token: str
     refresh_token: str
     token_type: str = "Bearer"  # noqa: S105

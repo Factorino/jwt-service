@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from dishka.integrations.fastapi import FromDishka
+from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter, Depends, status
 
 from app.application.queries.user.get_by_username import (
@@ -17,6 +17,7 @@ from app.presentation.api.schemas.user.responses import UserSchema
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
+    route_class=DishkaRoute,
 )
 
 
@@ -29,7 +30,7 @@ async def get_me(
     _token: Annotated[str, Depends(get_current_user_token)],
 ) -> UserSchema:
     response_dto: GetMeResponse = await interactor.execute()
-    return map_to(response_dto.user, UserSchema)
+    return UserSchema.model_validate(response_dto.user)
 
 
 @router.get(
@@ -43,4 +44,4 @@ async def get_user_by_username(
 ) -> UserSchema:
     request_dto = GetUserByUsernameRequest(username=username)
     response_dto: GetUserByUsernameResponse = await interactor.execute(request_dto)
-    return map_to(response_dto.user, UserSchema)
+    return UserSchema.model_validate(response_dto.user)

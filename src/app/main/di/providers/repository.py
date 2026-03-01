@@ -1,7 +1,7 @@
 from dishka import BaseScope, Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.user.repository import IUserRepository
 from app.infrastructure.database.repositories.user_repository import SAUserRepository
 
 

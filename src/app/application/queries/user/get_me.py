@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from app.application.common.dto.base import dto
 from app.application.common.dto.user import UserRead
 from app.application.interfaces.auth.identity_provider import IIdentityProvider
-from app.application.interfaces.interactor import Interactor
+from app.application.interfaces.common.interactor import Interactor
 
 
 if TYPE_CHECKING:

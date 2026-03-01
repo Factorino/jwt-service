@@ -4,7 +4,7 @@ from dishka import BaseScope, Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.asyncio.engine import AsyncEngine
 
-from app.application.interfaces.transaction_manager import ITransactionManager
+from app.application.interfaces.common.transaction_manager import ITransactionManager
 from app.infrastructure.database.transaction_manager import SATransactionManager
 from app.main.configs.database import DatabaseConfig
 

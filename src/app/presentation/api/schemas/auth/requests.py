@@ -6,10 +6,5 @@ class RegisterUserRequestSchema(BaseModel):
     password: str
 
 
-class LoginUserRequestSchema(BaseModel):
-    username: str
-    password: str
-
-
 class RefreshTokenRequestSchema(BaseModel):
     refresh_token: str

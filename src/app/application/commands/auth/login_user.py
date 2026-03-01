@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING
 
 from app.application.common.dto.base import dto
 from app.application.common.dto.user import UserRead
-from app.application.errors.auth import AuthenticationError
+from app.application.errors.auth import InvalidCredentialsError
 from app.application.interfaces.auth.jwt_provider import IJWTProvider, TokenPayload
 from app.application.interfaces.auth.password_hasher import IPasswordHasher
-from app.application.interfaces.interactor import Interactor
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.common.interactor import Interactor
+from app.application.interfaces.user.repository import IUserRepository
 
 
 if TYPE_CHECKING:
@@ -40,14 +40,14 @@ class LoginUser(Interactor[LoginUserRequest, LoginUserResponse]):
     async def execute(self, request: LoginUserRequest) -> LoginUserResponse:
         user: User | None = await self._user_repository.find_by_username(request.username)
         if user is None:
-            raise AuthenticationError("Invalid username or password")
+            raise InvalidCredentialsError("Invalid username or password")
 
         is_valid: bool = self._password_hasher.verify_password(
             request.password,
             user.password_hash,
         )
         if not is_valid:
-            raise AuthenticationError("Invalid username or password")
+            raise InvalidCredentialsError("Invalid username or password")
 
         payload = TokenPayload(sub=user.id, role=user.role)
         access_token: str = self._jwt_provider.create_access_token(payload)

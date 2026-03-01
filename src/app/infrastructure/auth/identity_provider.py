@@ -1,8 +1,7 @@
-from app.application.errors.auth import InvalidTokenError
-from app.application.errors.base import NotFoundError
+from app.application.errors.auth import AuthenticationError, InvalidTokenError
 from app.application.interfaces.auth.identity_provider import IIdentityProvider
 from app.application.interfaces.auth.jwt_provider import IJWTProvider, TokenData, TokenType
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.user.repository import IUserRepository
 from app.domain.entities.user import User
 
 
@@ -35,6 +34,6 @@ class FastAPIIdentityProvider(IIdentityProvider):
         user: User | None = await self._user_repository.find_by_id(decoded.sub)
 
         if user is None:
-            raise NotFoundError("User not found")
+            raise AuthenticationError("User no longer exists")
 
         return user

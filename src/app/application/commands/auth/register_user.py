@@ -3,9 +3,9 @@ import uuid
 from app.application.common.dto.base import dto
 from app.application.common.dto.user import UserRead
 from app.application.interfaces.auth.password_hasher import IPasswordHasher
-from app.application.interfaces.interactor import Interactor
-from app.application.interfaces.transaction_manager import ITransactionManager
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.common.interactor import Interactor
+from app.application.interfaces.common.transaction_manager import ITransactionManager
+from app.application.interfaces.user.repository import IUserRepository
 from app.domain.entities.user import User
 from app.domain.errors.base import AlreadyExistsError, ValidationError
 

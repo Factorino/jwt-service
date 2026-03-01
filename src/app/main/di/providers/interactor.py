@@ -6,8 +6,8 @@ from app.application.commands.auth.register_user import RegisterUser
 from app.application.interfaces.auth.identity_provider import IIdentityProvider
 from app.application.interfaces.auth.jwt_provider import IJWTProvider
 from app.application.interfaces.auth.password_hasher import IPasswordHasher
-from app.application.interfaces.transaction_manager import ITransactionManager
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.common.transaction_manager import ITransactionManager
+from app.application.interfaces.user.repository import IUserRepository
 from app.application.queries.user.get_by_username import GetUserByUsername
 from app.application.queries.user.get_me import GetMe
 

@@ -5,6 +5,11 @@ build/
 dist/
 wheels/
 *.egg-info
+.*cache
 
 # Virtual environments
 .venv
+
+config/config.toml
+secrets/
+data/

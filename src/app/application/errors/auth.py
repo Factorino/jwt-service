@@ -5,6 +5,10 @@ class AuthenticationError(ApplicationError):
     pass
 
 
+class InvalidCredentialsError(AuthenticationError):
+    pass
+
+
 class InvalidTokenError(AuthenticationError):
     pass
 
@@ -13,5 +17,5 @@ class TokenExpiredError(AuthenticationError):
     pass
 
 
-class ForbiddenError(ApplicationError):
+class AccessDeniedError(ApplicationError):
     pass

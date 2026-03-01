@@ -2,16 +2,15 @@ from typing import TYPE_CHECKING
 
 from app.application.common.dto.base import dto
 from app.application.common.dto.user import UserRead
-from app.application.errors.auth import InvalidTokenError
-from app.application.errors.base import NotFoundError
+from app.application.errors.auth import AuthenticationError, InvalidTokenError
 from app.application.interfaces.auth.jwt_provider import (
     IJWTProvider,
     TokenData,
     TokenPayload,
     TokenType,
 )
-from app.application.interfaces.interactor import Interactor
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.common.interactor import Interactor
+from app.application.interfaces.user.repository import IUserRepository
 
 
 if TYPE_CHECKING:
@@ -45,9 +44,9 @@ class RefreshToken(Interactor[RefreshTokenRequest, RefreshTokenResponse]):
         if decoded.type != TokenType.REFRESH:
             raise InvalidTokenError(f"Token type must be '{TokenType.REFRESH}'")
 
-        user: User | None = await self._user_repository.find_by_id(decoded.payload.sub)
+        user: User | None = await self._user_repository.find_by_id(decoded.sub)
         if user is None:
-            raise NotFoundError("User not found")
+            raise AuthenticationError("User no longer exists")
 
         payload = TokenPayload(sub=user.id, role=user.role)
         access_token: str = self._jwt_provider.create_access_token(payload)

@@ -1,17 +1,14 @@
-from typing import Annotated
-
 from dishka import BaseScope, Provider, Scope, provide
-from fastapi import Depends
+from fastapi import Request
 
 from app.application.interfaces.auth.identity_provider import IIdentityProvider
 from app.application.interfaces.auth.jwt_provider import IJWTProvider
 from app.application.interfaces.auth.password_hasher import IPasswordHasher
-from app.application.interfaces.user.user_repository import IUserRepository
+from app.application.interfaces.user.repository import IUserRepository
 from app.infrastructure.auth.identity_provider import FastAPIIdentityProvider
 from app.infrastructure.auth.jwt_provider import PyJWTProvider
 from app.infrastructure.auth.password_hasher import BcryptPasswordHasher
 from app.main.configs.jwt import JWTConfig
-from app.presentation.api.dependencies import get_current_user_token
 
 
 class AuthProvider(Provider):
@@ -34,10 +31,11 @@ class AuthProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def identity_provider(
         self,
-        token: Annotated[str, Depends(get_current_user_token)],
+        request: Request,
         jwt_provider: IJWTProvider,
         user_repository: IUserRepository,
     ) -> IIdentityProvider:
+        token: str = request.headers.get("Authorization", "").removeprefix("Bearer ")
         return FastAPIIdentityProvider(
             token=token,
             jwt_provider=jwt_provider,

@@ -1,0 +1,24 @@
+[database]
+db_path = "data/app_db.sqlite"
+driver = "sqlite+aiosqlite"
+
+[api]
+host = "127.0.0.1"
+port = 8000
+workers = 4
+debug = false
+environment = "development"
+
+[api.cors]
+allow_origins = ["*"]
+allow_credentials = false
+allow_methods = ["*"]
+allow_headers = ["*"]
+max_age = 600
+
+[jwt]
+algorithm = "RS256"
+private_key_path = "secrets/private.pem"
+public_key_path = "secrets/public.pem"
+access_ttl_minutes = 15
+refresh_ttl_minutes = 10080  # 7 days

@@ -5,6 +5,7 @@ from adaptix import Retort
 import jwt
 
 from app.application.errors.auth import InvalidTokenError, TokenExpiredError
+from app.application.errors.base import DataMapperError, OperationFailedError
 from app.application.interfaces.auth.jwt_provider import (
     IJWTProvider,
     TokenData,
@@ -44,11 +45,15 @@ class PyJWTProvider(IJWTProvider):
                 key=self._public_key,
                 algorithms=[self._algorithm],
             )
-            return _retort.load(token_data, TokenData)
         except jwt.ExpiredSignatureError as e:
             raise TokenExpiredError("Token has expired") from e
         except jwt.InvalidTokenError as e:
             raise InvalidTokenError("Token is invalid") from e
+
+        try:
+            return _retort.load(token_data, TokenData)
+        except Exception as e:
+            raise DataMapperError from e
 
     def _create_token(self, payload: TokenPayload, token_type: TokenType) -> str:
         now: datetime = datetime.now(tz=UTC)
@@ -65,8 +70,16 @@ class PyJWTProvider(IJWTProvider):
             exp=exp,
         )
 
-        return jwt.encode(
-            _retort.dump(token_data),
-            key=self._private_key,
-            algorithm=self._algorithm,
-        )
+        try:
+            data: dict[str, Any] = _retort.dump(token_data)
+        except Exception as e:
+            raise DataMapperError from e
+
+        try:
+            return jwt.encode(
+                data,
+                key=self._private_key,
+                algorithm=self._algorithm,
+            )
+        except jwt.PyJWTError as e:
+            raise OperationFailedError from e

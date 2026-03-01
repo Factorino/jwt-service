@@ -4,7 +4,7 @@ from enum import StrEnum
 from app.main.configs.base import config
 
 
-class Envirenment(StrEnum):
+class Environment(StrEnum):
     DEV = "development"
     PROD = "production"
     TEST = "testing"
@@ -12,10 +12,10 @@ class Envirenment(StrEnum):
 
 @config
 class CorsConfig:
-    allow_origins: list[str] = field(default=["*"])
+    allow_origins: list[str] = field(default_factory=lambda: ["*"])
     allow_credentials: bool = False
-    allow_methods: list[str] = field(default=["*"])
-    allow_headers: list[str] = field(default=["*"])
+    allow_methods: list[str] = field(default_factory=lambda: ["*"])
+    allow_headers: list[str] = field(default_factory=lambda: ["*"])
     max_age: int = 600
 
 
@@ -25,6 +25,6 @@ class APIConfig:
     port: int = 8000
     workers: int = 4
     debug: bool = False
-    environment: Envirenment = Envirenment.DEV
+    environment: Environment = Environment.DEV
 
     cors: CorsConfig = field(default_factory=CorsConfig)

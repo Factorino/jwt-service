@@ -1,9 +1,10 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from app.domain.enums.user_role import UserRole
+from app.presentation.api.schemas.common.response import BaseResponseSchema
 
 
-class UserSchema(BaseModel):
+class UserSchema(BaseResponseSchema):
     id: UUID
     username: str
-    role: str
+    role: UserRole

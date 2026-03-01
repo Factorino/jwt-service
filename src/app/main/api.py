@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 def create_app(config: Config) -> FastAPI:
     app = FastAPI(
-        title="Malbrew API",
+        title="Auth API",
         version="1.0.0",
         docs_url="/docs",
         redoc_url="/redoc",
