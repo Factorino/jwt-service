@@ -1,12 +1,8 @@
-from collections.abc import Callable
-from types import MappingProxyType
-from typing import Annotated, Any, Final
+from typing import Annotated
 
-from adaptix.conversion import get_converter
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
 
 from app.application.commands.auth.login_user import LoginUser, LoginUserRequest, LoginUserResponse
 from app.application.commands.auth.refresh_token import (
@@ -28,17 +24,6 @@ from app.presentation.api.schemas.auth.responses import (
     RefreshTokenResponseSchema,
     RegisterUserResponseSchema,
 )
-from app.presentation.api.schemas.mapper import get_mapper
-
-
-_MAPPING: Final[MappingProxyType[type[BaseModel], Callable[[BaseModel], Any]]] = MappingProxyType(
-    {
-        RegisterUserRequestSchema: get_converter(RegisterUserRequestSchema, RegisterUserRequest),
-        RefreshTokenRequestSchema: get_converter(RefreshTokenRequestSchema, RefreshTokenRequest),
-    }
-)
-
-_mapper: Callable[[BaseModel], Any] = get_mapper(_MAPPING)
 
 
 router = APIRouter(
@@ -56,8 +41,7 @@ async def register(
     request: RegisterUserRequestSchema,
     interactor: FromDishka[RegisterUser],
 ) -> RegisterUserResponseSchema:
-    request_dto: RegisterUserRequest = _mapper(request)
-    response_dto: RegisterUserResponse = await interactor.execute(request_dto)
+    response_dto: RegisterUserResponse = await interactor.execute(request)
     return RegisterUserResponseSchema.model_validate(response_dto)
 
 
@@ -84,6 +68,5 @@ async def refresh_token(
     request: RefreshTokenRequestSchema,
     interactor: FromDishka[RefreshToken],
 ) -> RefreshTokenResponseSchema:
-    request_dto: RefreshTokenRequest = _mapper(request)
-    response_dto: RefreshTokenResponse = await interactor.execute(request_dto)
+    response_dto: RefreshTokenResponse = await interactor.execute(request)
     return RefreshTokenResponseSchema.model_validate(response_dto)

@@ -1,10 +1,15 @@
-from pydantic import BaseModel
+from pydantic.dataclasses import dataclass
+
+from app.application.commands.auth.refresh_token import RefreshTokenRequest
+from app.application.commands.auth.register_user import RegisterUserRequest
 
 
-class RegisterUserRequestSchema(BaseModel):
-    username: str
-    password: str
+@dataclass(frozen=True)
+class RegisterUserRequestSchema(RegisterUserRequest):
+    pass
 
 
-class RefreshTokenRequestSchema(BaseModel):
-    refresh_token: str
+
+@dataclass(frozen=True)
+class RefreshTokenRequestSchema(RefreshTokenRequest):
+    pass
