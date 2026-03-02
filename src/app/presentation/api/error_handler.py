@@ -21,7 +21,7 @@ from app.domain.errors.base import (
 from app.presentation.api.schemas.common.error import ErrorResponseSchema
 
 
-ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyType(
+_ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyType(
     {
         # Domain errors
         ValidationError: status.HTTP_400_BAD_REQUEST,
@@ -38,26 +38,26 @@ ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyTy
 )
 
 
-def get_error_status_code(exception: Exception) -> int:
+def _get_error_status_code(exception: Exception) -> int:
     for cls in type(exception).mro():
-        if cls in ERROR_STATUS_CODE:
-            return ERROR_STATUS_CODE[cls]
+        if cls in _ERROR_STATUS_CODE:
+            return _ERROR_STATUS_CODE[cls]
     return status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-def get_error_type(exception: Exception) -> str:
+def _get_error_type(exception: Exception) -> str:
     return type(exception).__qualname__
 
 
-def get_error_message(exception: Exception) -> str:
+def _get_error_message(exception: Exception) -> str:
     return str(exception) if exception.args else "Unexpected error"
 
 
 async def app_error_handler(_request: Request, exception: Exception) -> JSONResponse:
     error: AppError = exception if isinstance(exception, AppError) else UnexpectedError()
-    error_status_code: int = get_error_status_code(error)
-    error_type: str = get_error_type(error)
-    error_message: str = get_error_message(error)
+    error_status_code: int = _get_error_status_code(error)
+    error_type: str = _get_error_type(error)
+    error_message: str = _get_error_message(error)
 
     error_response: dict[str, Any] = ErrorResponseSchema(
         status_code=error_status_code,

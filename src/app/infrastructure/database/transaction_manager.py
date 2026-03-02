@@ -18,12 +18,6 @@ class SATransactionManager(ITransactionManager):
         except SQLAlchemyError as e:
             self._handle_exception(e)
 
-    async def flush(self) -> None:
-        try:
-            await self._session.flush()
-        except SQLAlchemyError as e:
-            self._handle_exception(e)
-
     async def rollback(self) -> None:
         try:
             await self._session.rollback()
