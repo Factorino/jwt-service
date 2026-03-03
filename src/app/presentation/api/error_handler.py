@@ -3,6 +3,7 @@ from typing import Any, Final
 
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from app.application.errors.auth import (
     AccessDeniedError,
@@ -18,7 +19,6 @@ from app.domain.errors.base import (
     AppError,
     ValidationError,
 )
-from app.presentation.api.schemas.common.error import ErrorResponseSchema
 
 
 _ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyType(
@@ -36,6 +36,13 @@ _ERROR_STATUS_CODE: Final[MappingProxyType[type[AppError], int]] = MappingProxyT
         AppError: status.HTTP_500_INTERNAL_SERVER_ERROR,
     }
 )
+
+
+class ErrorResponse(BaseModel):
+    status_code: int
+    error_type: str
+    message: str
+    detail: dict[str, Any] = {}
 
 
 def _get_error_status_code(exception: Exception) -> int:
@@ -59,7 +66,7 @@ async def app_error_handler(_request: Request, exception: Exception) -> JSONResp
     error_type: str = _get_error_type(error)
     error_message: str = _get_error_message(error)
 
-    error_response: dict[str, Any] = ErrorResponseSchema(
+    error_response: dict[str, Any] = ErrorResponse(
         status_code=error_status_code,
         error_type=error_type,
         message=error_message,

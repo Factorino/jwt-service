@@ -15,15 +15,6 @@ from app.application.commands.auth.register_user import (
     RegisterUserRequest,
     RegisterUserResponse,
 )
-from app.presentation.api.schemas.auth.requests import (
-    RefreshTokenRequestSchema,
-    RegisterUserRequestSchema,
-)
-from app.presentation.api.schemas.auth.responses import (
-    LoginUserResponseSchema,
-    RefreshTokenResponseSchema,
-    RegisterUserResponseSchema,
-)
 
 
 router = APIRouter(
@@ -38,11 +29,10 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def register(
-    request: RegisterUserRequestSchema,
+    request: RegisterUserRequest,
     interactor: FromDishka[RegisterUser],
-) -> RegisterUserResponseSchema:
-    response_dto: RegisterUserResponse = await interactor.execute(request)
-    return RegisterUserResponseSchema.model_validate(response_dto)
+) -> RegisterUserResponse:
+    return await interactor.execute(request)
 
 
 @router.post(
@@ -52,12 +42,11 @@ async def register(
 async def login(
     request: Annotated[OAuth2PasswordRequestForm, Depends()],
     interactor: FromDishka[LoginUser],
-) -> LoginUserResponseSchema:
+) -> LoginUserResponse:
     request_dto: LoginUserRequest = LoginUserRequest(
         username=request.username, password=request.password
     )
-    response_dto: LoginUserResponse = await interactor.execute(request_dto)
-    return LoginUserResponseSchema.model_validate(response_dto)
+    return await interactor.execute(request_dto)
 
 
 @router.post(
@@ -65,8 +54,7 @@ async def login(
     status_code=status.HTTP_200_OK,
 )
 async def refresh_token(
-    request: RefreshTokenRequestSchema,
+    request: RefreshTokenRequest,
     interactor: FromDishka[RefreshToken],
-) -> RefreshTokenResponseSchema:
-    response_dto: RefreshTokenResponse = await interactor.execute(request)
-    return RefreshTokenResponseSchema.model_validate(response_dto)
+) -> RefreshTokenResponse:
+    return await interactor.execute(request)

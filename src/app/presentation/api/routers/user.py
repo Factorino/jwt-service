@@ -3,6 +3,7 @@ from typing import Annotated
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter, Depends, status
 
+from app.application.common.dto.user import UserRead
 from app.application.queries.user.get_by_username import (
     GetUserByUsername,
     GetUserByUsernameRequest,
@@ -10,7 +11,6 @@ from app.application.queries.user.get_by_username import (
 )
 from app.application.queries.user.get_me import GetMe, GetMeResponse
 from app.presentation.api.dependencies import get_current_user_token
-from app.presentation.api.schemas.user.responses import UserSchema
 
 
 router = APIRouter(
@@ -27,9 +27,9 @@ router = APIRouter(
 async def get_me(
     interactor: FromDishka[GetMe],
     _token: Annotated[str, Depends(get_current_user_token)],
-) -> UserSchema:
+) -> UserRead:
     response_dto: GetMeResponse = await interactor.execute()
-    return UserSchema.model_validate(response_dto.user)
+    return response_dto.user
 
 
 @router.get(
@@ -40,7 +40,7 @@ async def get_user_by_username(
     username: str,
     interactor: FromDishka[GetUserByUsername],
     _token: Annotated[str, Depends(get_current_user_token)],
-) -> UserSchema:
+) -> UserRead:
     request_dto = GetUserByUsernameRequest(username=username)
     response_dto: GetUserByUsernameResponse = await interactor.execute(request_dto)
-    return UserSchema.model_validate(response_dto.user)
+    return response_dto.user
